@@ -1,35 +1,94 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import axios from 'axios';
+import './App.css';
+import ImageUploader from './components/ImageUploader';
+import ConversionOptions from './components/ConversionOptions';
+import ConversionResult from './components/ConversionResult';
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [uploadedFile, setUploadedFile] = useState<any>(null);
+  const [conversionResult, setConversionResult] = useState<any>(null);
+  const [isConverting, setIsConverting] = useState(false);
+  const [error, setError] = useState<String | null>(null);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+  const handleUploadSuccess = (data: any) => {
+    setUploadedFile(data.file);
+    setConversionResult(null);
+    setError(null);
+  };
+
+  const handleConvert = async (options: any) => {
+    setIsConverting(true);
+    setError(null);
+
+    try {
+      let response: any;
+
+      if (options.extractLayers){
+        response = await axios.post('http://localhost:5000/convert-with-layers', {
+          filePath: options.filePath,
+          targetFormat: options.targetFormat
+        });
+      } else {
+        response = await axios.post('http://localhost:5000/convert', {
+          filePath: options.filePath,
+          targetFormat: options.targetFormat,
+          quality: options.quality
+        });
+      }
+
+      setConversionResult(response.data);
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Conversion failed')
+    } finally {
+      setIsConverting(false);
+    }
+  };
+
+return (
+  <div className="app">
+    <header>
+      <h1>Image Converter</h1>
+      <p>High-performance image format conversion tool</p>
+    </header>
+    
+    <main>
+      {!uploadedFile ? (
+        <ImageUploader onUploadSuccess={handleUploadSuccess} />
+      ) : (
+        <div className="conversion-container">
+          <ConversionOptions
+            file={uploadedFile}
+            onConvert={handleConvert}
+          />
+          
+          {isConverting && (
+            <div className="converting-indicator">
+              <div className="spinner"></div>
+              <p>Converting...</p>
+            </div>
+          )}
+          
+          {error && <p className="error-message">{error}</p>}
+          
+          <ConversionResult result={conversionResult} />
+          
+          <button
+            className="reset-button"
+            onClick={() => {
+              setUploadedFile(null);
+              setConversionResult(null);
+            }}
+          >
+            Convert Another Image
+          </button>
+        </div>
+      )}
+    </main>
+  </div>
+  );
 }
 
-export default App
+export default App;
