@@ -42,7 +42,9 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ( { file, onConvert 
                         <option value="png">PNG</option>
                         <option value="webp">WEBP</option>
                         <option value="tiff">TIFF</option>
-                        {file.mimetype === 'image/svg+xml' && <option value="svg">SVG</option>}
+                        <option value="svg">SVG</option>
+                        <option value="ai">AI</option>
+                        <option value="psd">PSD</option>
                     </select>
                 </div>
 

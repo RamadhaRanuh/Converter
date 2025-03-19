@@ -27,12 +27,12 @@ function App() {
       let response: any;
 
       if (options.extractLayers){
-        response = await axios.post('http://localhost:5000/convert-with-layers', {
+        response = await axios.post('http://localhost:3000/api/images/extract-layers', {
           filePath: options.filePath,
           targetFormat: options.targetFormat
         });
       } else {
-        response = await axios.post('http://localhost:5000/convert', {
+        response = await axios.post('http://localhost:3000/api/images/convert', {
           filePath: options.filePath,
           targetFormat: options.targetFormat,
           quality: options.quality

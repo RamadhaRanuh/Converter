@@ -10,7 +10,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // MIDDLEWARE SECTION
-app.use(cors()); // Enable Cross-Origin Resource Sharing
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173'], // Vite's default port
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  })); // Enable Cross-Origin Resource Sharing
 
 /*
 Example: if your backend is at http://localhost:3000 

@@ -7,6 +7,10 @@ interface ConversionResultProps {
 const ConversionResult: React.FC<ConversionResultProps> = ( { result } ) => {
     if (!result) return null;
 
+    const getFilename = (filepath: string) => {
+        return filepath.split('/').pop() || filepath;
+    };
+
     return (
 
         <div className="conversion-result">
@@ -18,8 +22,8 @@ const ConversionResult: React.FC<ConversionResultProps> = ( { result } ) => {
                     <p>Format: {result.targetFormat}</p>
                     <p>Path: {result.convertedPath}</p>
                     <a 
-                        href={`http://localhost:5000/${result.convertedPath}`}
-                        download
+                        href={`http://localhost:3000/${result.convertedPath}`}
+                        download={getFilename(result.convertedPath)}
                         className="download-button"
                     >
                     Download
@@ -36,8 +40,8 @@ const ConversionResult: React.FC<ConversionResultProps> = ( { result } ) => {
                             <div key={index} className="layer-item">
                                 <p>{layer.name}</p>
                                 <a
-                                    href={`http://localhost:5000/${layer.path}`}
-                                    download
+                                    href={`http://localhost:3000/${layer.path}`}
+                                    download={getFilename(layer.path)}
                                     className="download-button small"
                                 >
                                     Download
