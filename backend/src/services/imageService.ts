@@ -2,7 +2,7 @@ import path from 'path';
 import sharp from 'sharp';
 
 class ImageService {
-  async convertImage(inputPath: string, outputFormat: string, quality = 90) {
+  async convertImage(inputPath: string, outputFormat: string, quality = 100) {
     const outputPath = this.generateOutputPath(inputPath, outputFormat);
     
     let processor = sharp(inputPath);

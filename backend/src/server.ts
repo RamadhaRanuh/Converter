@@ -40,7 +40,41 @@ if (!fs.existsSync(uploadsDir)) // If the uploads directory does not exist, crea
 }
 
 // Serve static files from the uploads directory
-app.use('/uploads', express.static(uploadsDir));
+app.get('/uploads/:filename', (req: any, res: any) => {
+    const filename = req.params.filename;
+    const filepath = path.join(uploadsDir, filename);
+    
+    // Check if file exists
+    if (!fs.existsSync(filepath)) {
+        return res.status(404).send('File not found');
+    }
+
+    const ext = path.extname(filename).toLowerCase();
+
+    const contentTypes = {
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png',
+        '.gif': 'image/gif',
+        '.webp': 'image/webp',
+        '.svg': 'image/svg+xml',
+        '.psd': 'image/vnd.adobe.photoshop',
+        '.ai': 'application/postscript',
+        '.tiff': 'image/tiff',
+        '.tif': 'image/tiff',
+        '.bmp': 'image/bmp'
+    };
+    
+    // Set headers to force download
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+    // Set content type if known
+    if (ext in contentTypes) {
+        res.setHeader('Content-Type', contentTypes[ext as keyof typeof contentTypes]);
+    }
+    
+    res.sendFile(filepath);
+});
 
 // ROUTES SECTION
 app.use('/api/images', ImageRouter); 

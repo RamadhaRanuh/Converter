@@ -5,7 +5,7 @@ import fs from 'fs';
 
 class PSDService {
     // Convert PSD to PNG
-    async convertPSD(inputPath: any, outputFormat: any, quality = 90) {
+    async convertPSD(inputPath: any, outputFormat: any, quality = 100) {
         const psd = await PSD.open(inputPath);
         const outputPath = this.generateOutputPath(inputPath, outputFormat);
 

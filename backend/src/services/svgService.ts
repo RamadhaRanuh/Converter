@@ -13,49 +13,52 @@ class SVGService {
 
         const result = svgo.optimize(svgString, {
             plugins: [
-              'removeDoctype',
-              'removeXMLProcInst',
-              'removeComments',
-              'removeMetadata',
-              'removeEditorsNSData',
-              'cleanupAttrs',
-              'minifyStyles',
-              'convertStyleToAttrs',
-              'cleanupIds',
-              'removeUselessDefs',
-              'cleanupNumericValues',
-              'convertColors',
-              'removeUnknownsAndDefaults',
-              'removeNonInheritableGroupAttrs',
-              'removeUselessStrokeAndFill',
-              'removeViewBox',
-              'cleanupEnableBackground',
-              'removeHiddenElems',
-              'removeEmptyText',
-              'convertShapeToPath',
-              'convertEllipseToCircle',
-              'moveElemsAttrsToGroup',
-              'moveGroupAttrsToElems',
-              'collapseGroups',
-              'convertPathData',
-              'convertTransform',
-              'removeEmptyAttrs',
-              'removeEmptyContainers',
-              'mergePaths',
-              'removeUnusedNS',
-              'sortDefsChildren',
-              'removeTitle',
-              'removeDesc'
+                {
+                    name: 'preset-default',
+                    params: {
+                        overrides: {
+                            removeXMLProcInst: false,
+                            removeDoctype: false,
+                            removeViewBox: false,
+                            inlineStyles: false,
+                            removeMetadata: false,
+                            removeTitle: false
+                        }
+                    }
+                },
+                'removeComments',
+                'removeUselessDefs',
+                'cleanupNumericValues',
+                'mergePaths',
+                'sortAttrs'
             ]
         }) as SVGOResult;
         
         if ('data' in result) {
-            await fs.writeFile(outputPath, result.data);
+            // Add XML declaration if missing
+            let outputData = result.data;
+            if (!outputData.includes('<?xml')) {
+                outputData = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + outputData;
+            }
+            
+            if (!outputData.includes('<style>') && !outputData.includes('style="')) {
+                const style = `
+                    <style>
+                        svg {
+                            display: block;
+                            width: 100%;
+                            height: auto;
+                        }
+                    </style>
+                `;
+                outputData = outputData.replace(/(<svg[^>]*>)/, `$1\n${style}`);
+            }
+
+            await fs.writeFile(outputPath, outputData);
             return outputPath;
         } else {
             throw new Error(`SVG optimization failed: ${result.error}`);
         }
-        
     }
 
     generateOutputPath(inputPath: string) {
