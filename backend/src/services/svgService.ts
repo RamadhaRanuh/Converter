@@ -1,10 +1,49 @@
 import svgo from 'svgo';
 import fs from 'fs/promises';
+import potrace from 'potrace';
 import path from 'path';
 
 class SVGService {
+    async traceSVG(inputPath: string) {
+        const outputPath = this.generateOutputPath(inputPath);
+        const trace = potrace.trace;
+        const params = {
+            turdsize: 100,
+            optcurve: true,
+            alphamax: 1,
+            opttolerance: 0.2,
+            color: 'black',
+            background: 'white',
+            format: 'svg'
+        };
+
+        return new Promise((resolve, reject) => {
+            trace(inputPath, params, (err, svg) => {
+                if (err) {
+                    reject(err);
+                } else {
+
+                    fs.writeFile(outputPath, svg, 'utf8')
+                    .then(() => this.optimizeSVG(outputPath))
+                    .then(resolve)
+                    .catch(reject);
+                }
+            });
+        });
+    }
+    
     async optimizeSVG(inputPath: string) {
-        const svgString = await fs.readFile(inputPath, 'utf8');
+        const svgBuffer = await fs.readFile(inputPath);
+    
+        // Check if the file starts with valid UTF-8 text or XML declaration
+        let svgString;
+        if (svgBuffer.toString('utf8', 0, 5).match(/^(<\?xml|<svg)/)) {
+            svgString = svgBuffer.toString('utf8');
+        } else {
+            // Try to detect encoding or remove BOMs
+            svgString = svgBuffer.toString('utf8').replace(/^\uFEFF/, ''); // Remove BOM if present
+        }
+
         const outputPath = this.generateOutputPath(inputPath);
 
         interface SVGOSuccess { data: string; [key: string]: any; }
@@ -37,6 +76,7 @@ class SVGService {
         if ('data' in result) {
             // Add XML declaration if missing
             let outputData = result.data;
+            console.log('Optimized SVG:', outputData);
             if (!outputData.includes('<?xml')) {
                 outputData = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>\n' + outputData;
             }

@@ -11,30 +11,34 @@ interface ConversionOptions {
 class ConverterService {
   async convertImage(filePath: string, targetFormat: string, options: ConversionOptions = {}) {
     const ext = path.extname(filePath).toLowerCase();
-    
+    console.log(ext, targetFormat);
     try {
       // Route to appropriate service based on file extension
-      switch (ext) {
+      switch (targetFormat) {
         case '.psd':
+          console.log('psd go here');
           return await PSDService.convertPSD(filePath, targetFormat, options.quality);
         
-        case '.svg':
-          if (targetFormat === 'svg') {
-            return await SVGService.optimizeSVG(filePath);
+        case 'svg':
+          if (ext === '.svg') {
+            // Optimize SVG using SVGO
+            console.log('svg go here')
+            return await SVGService.optimizeSVG(filePath); 
           } else {
-            // Convert SVG to other formats using OpenCV
-            return await OpenCVService.convertImage(filePath, targetFormat, options.quality);
+            return await SVGService.traceSVG(filePath);
           }
         
-        case '.ai':
+        case 'ai':
+          console.log('ai goes here');
           return await AIService.convertAI(filePath, targetFormat);
         
-        case '.jpg':
-        case '.jpeg':
-        case '.png':
-        case '.bmp':
-        case '.webp':
-        case '.tiff':
+        case 'jpg':
+        case 'jpeg':
+        case 'png':
+        case 'bmp':
+        case 'webp':
+        case 'tiff':
+          console.log('pixel go here');
           return await OpenCVService.convertImage(filePath, targetFormat, options.quality);
         
         default:

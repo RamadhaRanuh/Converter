@@ -6,13 +6,13 @@ class AIService {
     private execPromise = promisify(exec);
     async convertAI(inputPath: string, outputFormat: string) {
         const outputPath = this.generateOutputPath(inputPath, outputFormat);
-
+        //console.log(outputPath, 'tes');
         // Using ImageMagick
         try {
             await this.execPromise(`convert ${inputPath} ${outputPath}`);    
             return outputPath;
-        } catch (error) {
-
+        } catch (error: any) {
+            console.log(`ImageMagick failed: ${error.message}`);
             try {
                 await this.execPromise(`inkscape ${inputPath} --export-filename=${outputPath}`);
                 return outputPath;

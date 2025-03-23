@@ -47,7 +47,7 @@ export const ImageController = {
       return res.status(200).json({
         message: 'File converted successfully',
         originalPath: filePath,
-        convertedPath: path.relative(process.cwd(), convertedPath),
+        convertedPath: path.relative(process.cwd(), convertedPath as string),
         targetFormat
       });
     } catch (error: string | any) {

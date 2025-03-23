@@ -15,8 +15,9 @@ class ImageService {
       processor = processor.png({ compressionLevel });
     } else if (outputFormat === 'webp') {
       processor = processor.webp({ quality });
-    }
-    
+    } else if (outputFormat === 'tiff') {
+      processor = processor.tiff({ quality });
+    } 
     await processor.toFile(outputPath);
     return outputPath;
   }
