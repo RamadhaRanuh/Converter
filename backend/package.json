@@ -13,11 +13,13 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/imagemagick": "^0.0.35",
     "@types/potrace": "^2.1.5",
     "@types/psd": "^3.4.3",
     "@types/svgo": "^2.6.4",
     "cors": "^2.8.5",
     "express": "^4.21.2",
+    "imagemagick": "^0.1.3",
     "multer": "^1.4.5-lts.1",
     "potrace": "^2.1.8",
     "psd": "^3.4.0",

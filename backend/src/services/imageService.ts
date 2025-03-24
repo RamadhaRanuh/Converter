@@ -4,9 +4,9 @@ import sharp from 'sharp';
 class ImageService {
   async convertImage(inputPath: string, outputFormat: string, quality = 100) {
     const outputPath = this.generateOutputPath(inputPath, outputFormat);
-    
+    //console.log('output-path:',outputPath);
     let processor = sharp(inputPath);
-    
+    //console.log('processor:',processor);
     if (outputFormat === 'jpg' || outputFormat === 'jpeg') {
       processor = processor.jpeg({ quality });
     } else if (outputFormat === 'png') {

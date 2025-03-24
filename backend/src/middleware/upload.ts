@@ -13,12 +13,16 @@ const storage = multer.diskStorage({
 
 // File Filter
 const fileFilter = (req: any, file: any, cb: any) => {
-    const allowedTypes = [
-        'image/jpeg', 'image/png', 'image/bpm', 'image/webp', 'iamge/tiff',
+    const allowedMimeTypes = [
+        'image/jpeg', 'image/png', 'image/bmp', 'image/webp', 'image/tiff',
         'image/svg+xml', 'application/postscript', 'image/vnd.adobe.photoshop'
     ];
 
-    if (allowedTypes.includes(file.mimetype))
+    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.bmp', '.webp', '.tiff', '.svg', '.psd'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    console.log(file.mimetype);
+    console.log(ext);
+    if (allowedMimeTypes.includes(file.mimetype) || allowedExtensions.includes(ext))
     {
         cb(null, true);
     } 
