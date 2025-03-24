@@ -6,5 +6,6 @@ Convert:
 
 
 Todo:
-- svg error✅
-- AI & PSD testing
+- Support SVG✅
+- Support PSD✅
+- Support AI 
