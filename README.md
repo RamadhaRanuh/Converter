@@ -1,12 +1,5 @@
 # Image Converter
 
-A high-performance image format conversion tool.
-
-<p align="center">
-<img src="[https://github.com/user-attachments/assets/65857221-a266-4afe-82cd-e487050eadbd](https://github.com/user-attachments/assets/65857221-a266-4afe-82cd-e487050eadbd)" alt="Image Converter Interface">
-<img src="[https://github.com/user-attachments/assets/64dbd36e-04a1-49cb-8ff9-9b7e5d3f547f](https://github.com/user-attachments/assets/64dbd36e-04a1-49cb-8ff9-9b7e5d3f547f)" alt="Convert Feature">
-</p>
-
 -----
 
 ### Built with the tools and technologies:
@@ -25,7 +18,6 @@ A high-performance image format conversion tool.
   <img src="https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white" alt="ESLint">
   <img src="https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white" alt="npm">
 </p>
-\</p\>
 
 -----
 
