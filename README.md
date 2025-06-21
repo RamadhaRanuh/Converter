@@ -1,7 +1,5 @@
 <h1 align="center">Converter</h1>
 
------
-
 ### Built with the tools and technologies:
 
 <p align="center">
@@ -18,8 +16,6 @@
   <img src="https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white" alt="ESLint">
   <img src="https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white" alt="npm">
 </p>
-
------
 
 ## Getting Started
 
