@@ -1,4 +1,4 @@
-<h1 align="center">Converter</h1>
+<h1 align="center">Convertly – A sleek, modern play on "convert"</h1>
 
 ### Built with the tools and technologies:
 
