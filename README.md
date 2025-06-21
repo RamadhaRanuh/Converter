@@ -1,4 +1,4 @@
-# Image Converter
+<h1 align="center">Converter</h1>
 
 -----
 
@@ -27,7 +27,7 @@ To get a local copy up and running, follow these simple steps.
 
 ### Prerequisites
 
-Ensure you have Node.js and npm (Node Package Manager) installed.
+Please make sure you have Node.js and npm (Node Package Manager) installed.
 Additionally, for full functionality, ImageMagick and Inkscape are required for certain image conversions (e.g., AI and PSD conversions).
 
   * **Node.js & npm**: Install from [Node.js official website](https://nodejs.org/).
