@@ -2,28 +2,29 @@
 
 A high-performance image format conversion tool.
 
-\<p align="center"\>
-\<img src="[https://github.com/user-attachments/assets/65857221-a266-4afe-82cd-e487050eadbd](https://github.com/user-attachments/assets/65857221-a266-4afe-82cd-e487050eadbd)" alt="Image Converter Interface"\>
-\<img src="[https://github.com/user-attachments/assets/64dbd36e-04a1-49cb-8ff9-9b7e5d3f547f](https://github.com/user-attachments/assets/64dbd36e-04a1-49cb-8ff9-9b7e5d3f547f)" alt="Convert Feature"\>
-\</p\>
+<p align="center">
+<img src="[https://github.com/user-attachments/assets/65857221-a266-4afe-82cd-e487050eadbd](https://github.com/user-attachments/assets/65857221-a266-4afe-82cd-e487050eadbd)" alt="Image Converter Interface">
+<img src="[https://github.com/user-attachments/assets/64dbd36e-04a1-49cb-8ff9-9b7e5d3f547f](https://github.com/user-attachments/assets/64dbd36e-04a1-49cb-8ff9-9b7e5d3f547f)" alt="Convert Feature">
+</p>
 
 -----
 
 ### Built with the tools and technologies:
 
-\<p align="center"\>
-\<img src="[https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/-TypeScript-3178C6%3Flogo%3Dtypescript%26logoColor%3Dwhite)" alt="TypeScript"\>
-\<img src="[https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript\&logoColor=black](https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black)" alt="JavaScript"\>
-\<img src="[https://img.shields.io/badge/-React-61DAFB?logo=react\&logoColor=black](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black)" alt="React"\>
-\<img src="[https://img.shields.io/badge/-Express.js-000000?logo=express\&logoColor=white](https://img.shields.io/badge/-Express.js-000000?logo=express&logoColor=white)" alt="Express.js"\>
-\<img src="[https://img.shields.io/badge/-Vite-646CFF?logo=vite\&logoColor=white](https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white)" alt="Vite"\>
-\<img src="[https://img.shields.io/badge/-Sharp-6c757d?logo=sharp\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/-Sharp-6c757d%3Flogo%3Dsharp%26logoColor%3Dwhite)" alt="Sharp"\>
-\<img src="[https://img.shields.io/badge/-SVGO-4B32C3?logo=svgo\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/-SVGO-4B32C3%3Flogo%3Dsvgo%26logoColor%3Dwhite)" alt="SVGO"\>
-\<img src="[https://img.shields.io/badge/-PSD-4B32C3?logo=adobe-photoshop\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/-PSD-4B32C3%3Flogo%3Dadobe-photoshop%26logoColor%3Dwhite)" alt="PSD"\>
-\<img src="[https://img.shields.io/badge/-Multer-000000?logo=multer\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/-Multer-000000%3Flogo%3Dmulter%26logoColor%3Dwhite)" alt="Multer"\>
-\<img src="[https://img.shields.io/badge/-Axios-000000?logo=axios\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/-Axios-000000%3Flogo%3Daxios%26logoColor%3Dwhite)" alt="Axios"\>
-\<img src="[https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint\&logoColor=white](https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white)" alt="ESLint"\>
-\<img src="[https://img.shields.io/badge/-npm-CB3837?logo=npm\&logoColor=white](https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white)" alt="npm"\>
+<p align="center">
+  <img src="https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript">
+  <img src="https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black" alt="React">
+  <img src="https://img.shields.io/badge/-Express.js-000000?logo=express&logoColor=white" alt="Express.js">
+  <img src="https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white" alt="Vite">
+  <img src="https://img.shields.io/badge/-Sharp-6c757d?logo=sharp&logoColor=white" alt="Sharp">
+  <img src="https://img.shields.io/badge/-SVGO-4B32C3?logo=svgo&logoColor=white" alt="SVGO">
+  <img src="https://img.shields.io/badge/-PSD-4B32C3?logo=adobe-photoshop&logoColor=white" alt="PSD">
+  <img src="https://img.shields.io/badge/-Multer-000000?logo=multer&logoColor=white" alt="Multer">
+  <img src="https://img.shields.io/badge/-Axios-000000?logo=axios&logoColor=white" alt="Axios">
+  <img src="https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white" alt="ESLint">
+  <img src="https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white" alt="npm">
+</p>
 \</p\>
 
 -----
