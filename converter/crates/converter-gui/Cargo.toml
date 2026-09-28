@@ -1,6 +1,31 @@
 [package]
 name = "converter-gui"
-version = "0.1.0"
-edition = "2024"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
 
 [dependencies]
+converter-core = { version = "0.1.0", path = "../converter-core" }
+eframe = { version = "0.36.2", default-features = false, features = ["wgpu", "default_fonts", "accesskit", "wayland", "x11"] }
+rfd = "0.17.2"
+
+[features]
+heic = ["converter-core/heic"]
+
+[[bin]]
+name = "Converter"
+path = "src/main.rs"
+
+# Windows installer (NSIS, per-user, no admin prompt) via `cargo packager`; see ../../scripts/package.ps1.
+[package.metadata.packager]
+product-name = "Converter"
+identifier = "io.github.ramadharanuh.converter"
+description = "Convert images, designs and documents, fast and offline."
+formats = ["nsis"]
+out-dir = "../../dist"
+binaries = [{ path = "Converter", main = true }]
+# Staged by package.ps1; NSIS places resources next to the executable.
+resources = ["../../dist/stage/*"]
+
+[package.metadata.packager.nsis]
+installer-mode = "currentUser"
