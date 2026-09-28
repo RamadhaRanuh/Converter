@@ -1,4 +1,4 @@
-<h1 align="center">Convertly"</h1>
+<h1 align="center">Convertly</h1>
 
 <p align="center">A fast, offline desktop converter for images, designs, and documents. Drop files in, pick a format, done.</p>
 
