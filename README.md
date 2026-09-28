@@ -1,33 +1,57 @@
 <h1 align="center">Convertly – A sleek, modern play on "convert"</h1>
 
+<p align="center">A fast, offline desktop converter for images, designs and documents. Drop files in, pick a format, done.</p>
+
 ### Built with the tools and technologies:
 
 <p align="center">
-  <img src="https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript">
-  <img src="https://img.shields.io/badge/-JavaScript-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript">
-  <img src="https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=black" alt="React">
-  <img src="https://img.shields.io/badge/-Express.js-000000?logo=express&logoColor=white" alt="Express.js">
-  <img src="https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white" alt="Vite">
-  <img src="https://img.shields.io/badge/-Sharp-6c757d?logo=sharp&logoColor=white" alt="Sharp">
-  <img src="https://img.shields.io/badge/-SVGO-4B32C3?logo=svgo&logoColor=white" alt="SVGO">
-  <img src="https://img.shields.io/badge/-PSD-4B32C3?logo=adobe-photoshop&logoColor=white" alt="PSD">
-  <img src="https://img.shields.io/badge/-Multer-000000?logo=multer&logoColor=white" alt="Multer">
-  <img src="https://img.shields.io/badge/-Axios-000000?logo=axios&logoColor=white" alt="Axios">
-  <img src="https://img.shields.io/badge/-ESLint-4B32C3?logo=eslint&logoColor=white" alt="ESLint">
-  <img src="https://img.shields.io/badge/-npm-CB3837?logo=npm&logoColor=white" alt="npm">
+  <img src="https://img.shields.io/badge/-Rust-000000?logo=rust&logoColor=white" alt="Rust">
+  <img src="https://img.shields.io/badge/-egui-4B32C3?logo=rust&logoColor=white" alt="egui">
+  <img src="https://img.shields.io/badge/-Typst-239DAD?logo=typst&logoColor=white" alt="Typst">
+  <img src="https://img.shields.io/badge/-Windows-0078D4?logo=windows&logoColor=white" alt="Windows">
+  <img src="https://img.shields.io/badge/-GitHub%20Actions-2088FF?logo=githubactions&logoColor=white" alt="GitHub Actions">
 </p>
 
-## Desktop app (Rust)
+## Download
 
-A downloadable, offline rewrite lives in [`converter/`](converter/README.md): a fast Rust core with a desktop
-window and a command-line tool, covering images, HEIC, PSD, AI, SVG, PDF, Office documents and Markdown.
-Windows downloads (installer and portable zip) are on the [Releases](https://github.com/RamadhaRanuh/Converter/releases) page.
+Get the latest Windows version (10/11, 64-bit) from the **[Releases page](https://github.com/RamadhaRanuh/Converter/releases/latest)**:
 
-## Getting Started
+- **`Converter_…_x64-setup.exe`**: installs for your user only (no admin prompt) and adds a Start menu entry.
+- **`Converter-…-x64-portable.zip`**: unzip anywhere and run `Converter.exe`. Includes the `converter-cli.exe` command-line tool.
+
+The app isn't code-signed yet, so on first launch Windows SmartScreen may say "Windows protected your PC".
+Click **More info → Run anyway**. This only happens once.
+
+## What it converts
+
+| From | To |
+|---|---|
+| JPG, PNG, WebP, BMP, TIFF, GIF | any of those, PSD, SVG (traced), PDF |
+| HEIC (iPhone photos) | JPG, PNG, WebP, BMP, TIFF, GIF, PDF |
+| PSD, AI (Illustrator) | JPG, PNG, WebP, BMP, TIFF, GIF, PDF |
+| SVG | images, optimized SVG, PDF |
+| PDF | one image per page, split into pages |
+| Word, PowerPoint, Excel | PDF |
+| Markdown | PDF, HTML |
+
+It can also **combine** several images and PDFs into one PDF. Everything runs on your machine; nothing is uploaded.
+
+## Build from source
+
+The app lives in [`converter/`](converter/README.md), a Rust workspace with the conversion core, the desktop
+window, a command-line tool and a benchmark. See its README for build steps, the optional HEIC setup and speed
+numbers.
+
+## Legacy web app (archived)
+
+The original React/Express web app is kept for reference in [`legacy/web/`](legacy/web/). The desktop app
+replaces it; it is no longer maintained and needs ImageMagick and Inkscape installed.
+
+### Getting Started
 
 To get a local copy up and running, follow these simple steps.
 
-### Prerequisites
+#### Prerequisites
 
 Please make sure you have Node.js and npm (Node Package Manager) installed.
 Additionally, for full functionality, ImageMagick and Inkscape are required for certain image conversions (e.g., AI and PSD conversions).
@@ -36,35 +60,35 @@ Additionally, for full functionality, ImageMagick and Inkscape are required for 
   * **ImageMagick**: Download and install from [ImageMagick website](https://imagemagick.org/script/download.php).
   * **Inkscape**: Download and install from [Inkscape website](https://inkscape.org/release/).
 
-### Installation
+#### Installation
 
 1.  Clone the repository:
     ```bash
-    git clone [repository_url_here]
+    git clone https://github.com/RamadhaRanuh/Converter.git
     ```
 2.  Navigate to the project root directory:
     ```bash
-    cd Converter-5eab401413612d6a4de27c5824218d0ac65be006
+    cd Converter
     ```
 3.  Install NPM packages for both backend and frontend:
     ```bash
-    cd backend
+    cd legacy/web/backend
     npm install
     cd ../frontend
     npm install
-    cd ..
+    cd ../../..
     ```
 
-## Usage
+### Usage
 
-### Development
+#### Development
 
 To run the project in development mode:
 
 1.  Start the backend server:
 
     ```bash
-    cd backend
+    cd legacy/web/backend
     npm run dev
     ```
 
@@ -73,41 +97,41 @@ To run the project in development mode:
 2.  In a new terminal, start the frontend development server:
 
     ```bash
-    cd frontend
+    cd legacy/web/frontend
     npm run dev
     ```
 
     (This will start the frontend on `http://localhost:5173` or similar)
 
-### Build
+#### Build
 
 To build the project for production:
 
 1.  Build the backend:
     ```bash
-    cd backend
+    cd legacy/web/backend
     npm run build
     ```
 2.  Build the frontend:
     ```bash
-    cd frontend
+    cd legacy/web/frontend
     npm run build
     ```
-    The built files will be located in the `backend/dist` and `frontend/dist` directories respectively.
+    The built files will be located in the `legacy/web/backend/dist` and `legacy/web/frontend/dist` directories respectively.
 
-### Deployment
+#### Deployment
 
 This project can be deployed to static hosting services. For example, to deploy the frontend to GitHub Pages:
 
 ```bash
 # In the frontend directory
-cd frontend
+cd legacy/web/frontend
 npm run deploy
 ```
 
 The homepage will be set according to your `package.json` configuration for `gh-pages`.
 
-### Available Scripts
+#### Available Scripts
 
 In the project directories, you can run:
 
@@ -127,14 +151,12 @@ In the project directories, you can run:
   * `npm run predeploy`: Runs the build script before deployment (part of `gh-pages` setup).
   * `npm run deploy`: Deploys the `dist` folder to GitHub Pages (part of `gh-pages` setup).
 
-## File Structure
+### File Structure
 
-The main structure of the project is as follows:
+The web app's structure, under `legacy/web/`:
 
 ```
-.
-├── .gitignore
-├── README.md
+legacy/web/
 ├── backend/
 │   ├── dist/                 # Compiled JavaScript files
 │   │   ├── controllers/
@@ -173,7 +195,6 @@ The main structure of the project is as follows:
 
 ## License
 
-This project is licensed under the MIT License and ISC License, reflecting the separate licensing of the frontend and backend components respectively.
-
-[backend/package.json](https://www.google.com/search?q=uploaded:ramadharanuh/converter/Converter-5eab401413612d6a4de27c5824218d0ac65be006/backend/package.json)
-[frontend/package.json](https://www.google.com/search?q=uploaded:ramadharanuh/converter/Converter-5eab401413612d6a4de27c5824218d0ac65be006/frontend/package.json)
+The desktop app in `converter/` is licensed under MIT OR Apache-2.0 (see `converter/LICENSE-MIT` and
+`converter/LICENSE-APACHE`). The archived web app keeps its original licences: MIT for the frontend and ISC for
+the backend.

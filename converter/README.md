@@ -4,7 +4,7 @@ A fast, self-contained desktop converter for images, designs and documents. Drop
 window, pick a format, convert. Everything runs offline on your machine, and files are converted in parallel
 across all CPU cores.
 
-It replaces the React/Express app in `frontend/` and `backend/`, which remains in the repository as a reference.
+It replaces the earlier React/Express web app, now archived in [`legacy/web/`](../legacy/web/).
 
 ## What it converts
 

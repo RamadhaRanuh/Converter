@@ -1,4 +1,4 @@
-backend/node_modules/
-frontend/node_modules/
+legacy/web/backend/node_modules/
+legacy/web/frontend/node_modules/
 .env
-backend/uploads/
+legacy/web/backend/uploads/
