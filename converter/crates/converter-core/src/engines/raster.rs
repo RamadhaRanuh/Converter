@@ -5,7 +5,7 @@ use std::path::Path;
 use image::codecs::gif::GifEncoder;
 use image::codecs::jpeg::JpegEncoder;
 use image::codecs::png::{CompressionType, FilterType, PngEncoder};
-use image::{DynamicImage, ImageDecoder, ImageFormat, ImageReader, RgbImage, RgbaImage};
+use image::{DynamicImage, ImageDecoder, ImageFormat, ImageReader, RgbImage};
 
 use crate::{Error, Format, Options};
 
@@ -62,14 +62,24 @@ pub(crate) fn encode(img: &DynamicImage, format: Format, opts: &Options, out: im
             write_with(img, enc).map_err(err)?;
         }
         Format::WebP => {
-            let rgba: RgbaImage;
-            let enc = if img.color().has_alpha() {
-                rgba = img.to_rgba8();
-                webp::Encoder::from_rgba(rgba.as_raw(), rgba.width(), rgba.height())
-            } else {
-                let rgb = img.to_rgb8();
-                let mem = webp_encode(webp::Encoder::from_rgb(rgb.as_raw(), rgb.width(), rgb.height()), opts)?;
-                return w.write_all(&mem).and_then(|_| w.flush()).map_err(|e| Error::encode(format, e));
+            // Borrow 8-bit pixels where possible: a 12 MP photo copy is 36 MB per Conversion in flight.
+            let (w8, h8) = (img.width(), img.height());
+            let converted: DynamicImage;
+            let src = match img {
+                DynamicImage::ImageRgb8(_) | DynamicImage::ImageRgba8(_) => img,
+                _ if img.color().has_alpha() => {
+                    converted = DynamicImage::ImageRgba8(img.to_rgba8());
+                    &converted
+                }
+                _ => {
+                    converted = DynamicImage::ImageRgb8(img.to_rgb8());
+                    &converted
+                }
+            };
+            let enc = match src {
+                DynamicImage::ImageRgba8(p) => webp::Encoder::from_rgba(p.as_raw(), w8, h8),
+                DynamicImage::ImageRgb8(p) => webp::Encoder::from_rgb(p.as_raw(), w8, h8),
+                _ => unreachable!("converted above"),
             };
             let mem = webp_encode(enc, opts)?;
             w.write_all(&mem).map_err(|e| Error::encode(format, e))?;
@@ -81,7 +91,11 @@ pub(crate) fn encode(img: &DynamicImage, format: Format, opts: &Options, out: im
         Format::Bmp | Format::Tiff => {
             // Both writers need `Seek`; encode to memory first.
             let mut buf = std::io::Cursor::new(Vec::new());
-            let img = if format == Format::Bmp && img.color().has_alpha() { DynamicImage::ImageRgba8(img.to_rgba8()) } else { normalize_depth(img) };
+            let img = if format == Format::Bmp && img.color().has_alpha() {
+                DynamicImage::ImageRgba8(img.to_rgba8())
+            } else {
+                normalize_depth(img)
+            };
             img.write_to(&mut buf, image_format(format).unwrap()).map_err(err)?;
             w.write_all(buf.get_ref()).map_err(|e| Error::encode(format, e))?;
         }
@@ -91,11 +105,7 @@ pub(crate) fn encode(img: &DynamicImage, format: Format, opts: &Options, out: im
 }
 
 fn webp_encode(enc: webp::Encoder<'_>, opts: &Options) -> Result<Vec<u8>, Error> {
-    let mem = if opts.quality >= 100 {
-        enc.encode_lossless()
-    } else {
-        enc.encode(opts.quality.clamp(1, 100) as f32)
-    };
+    let mem = if opts.quality >= 100 { enc.encode_lossless() } else { enc.encode(opts.quality.clamp(1, 100) as f32) };
     Ok(mem.to_vec())
 }
 
@@ -119,7 +129,7 @@ pub(crate) mod tests {
 
     /// A photo-like test image: smooth gradients plus some structure.
     pub(crate) fn sample(w: u32, h: u32, alpha: bool) -> DynamicImage {
-        let img = RgbaImage::from_fn(w, h, |x, y| {
+        let img = image::RgbaImage::from_fn(w, h, |x, y| {
             let a = if alpha { ((x * 255) / w.max(1)) as u8 } else { 255 };
             image::Rgba([(x * 255 / w) as u8, (y * 255 / h) as u8, (((x + y) / 4) % 256) as u8, a])
         });
@@ -144,7 +154,11 @@ pub(crate) mod tests {
             encode(&src, f, &opts, std::fs::File::create(&p).unwrap()).unwrap();
             let back = decode(&p, f).unwrap();
             let d = mean_diff(&src, &back);
-            let bar = match f { Format::Gif => 12.0, Format::Jpeg | Format::WebP => 4.0, _ => 0.01 };
+            let bar = match f {
+                Format::Gif => 12.0,
+                Format::Jpeg | Format::WebP => 4.0,
+                _ => 0.01,
+            };
             assert!(d <= bar, "{f}: mean diff {d:.2} > {bar}");
         }
     }

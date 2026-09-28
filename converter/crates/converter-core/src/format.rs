@@ -87,7 +87,6 @@ impl Format {
             _ => return None,
         })
     }
-
 }
 
 impl fmt::Display for Format {
@@ -117,9 +116,7 @@ impl fmt::Display for Format {
 /// for formats that have no reliable signature (Markdown) or share one (ZIP-based Office files).
 pub fn detect(path: &Path) -> Result<Format, Error> {
     let mut head = [0u8; 4096];
-    let n = std::fs::File::open(path)
-        .and_then(|mut f| f.read(&mut head))
-        .map_err(|e| Error::io(path, e))?;
+    let n = std::fs::File::open(path).and_then(|mut f| f.read(&mut head)).map_err(|e| Error::io(path, e))?;
     let head = &head[..n];
     let by_ext = path.extension().and_then(|e| e.to_str()).and_then(Format::from_extension);
 

@@ -69,10 +69,7 @@ pub fn expand_sources(paths: &[PathBuf]) -> Vec<PathBuf> {
 
 /// Detects every Source file and works out which Target formats to offer.
 pub fn plan(paths: &[PathBuf]) -> Plan {
-    let files: Vec<PlannedFile> = expand_sources(paths)
-        .into_par_iter()
-        .map(|path| PlannedFile { format: detect(&path), path })
-        .collect();
+    let files: Vec<PlannedFile> = expand_sources(paths).into_par_iter().map(|path| PlannedFile { format: detect(&path), path }).collect();
     let mut counts: BTreeMap<usize, usize> = BTreeMap::new();
     for f in &files {
         if let Ok(fmt) = f.format {
@@ -119,7 +116,9 @@ pub fn run_batch(sources: Vec<PathBuf>, target: Target, opts: Options, events: S
                     Outcome::Failed
                 }
                 Err(panic) => {
-                    let msg = panic.downcast_ref::<&str>().map(|s| s.to_string())
+                    let msg = panic
+                        .downcast_ref::<&str>()
+                        .map(|s| s.to_string())
                         .or_else(|| panic.downcast_ref::<String>().cloned())
                         .unwrap_or_else(|| "unknown".into());
                     let _ = events.send(Event::Failed(i, Error::Panicked(msg)));
@@ -198,7 +197,8 @@ mod tests {
         let dir = tempfile::tempdir().unwrap();
         write_png(&dir.path().join("a.png"));
         let (tx, _rx) = std::sync::mpsc::channel();
-        let s = run_batch(vec![dir.path().join("a.png")], Target::Image(Format::Jpeg), Options::default(), tx, Arc::new(AtomicBool::new(true)));
+        let s =
+            run_batch(vec![dir.path().join("a.png")], Target::Image(Format::Jpeg), Options::default(), tx, Arc::new(AtomicBool::new(true)));
         assert!(s.cancelled && s.converted == 0);
     }
 }

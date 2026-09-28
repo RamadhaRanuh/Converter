@@ -134,6 +134,10 @@ mod tests {
         assert!(!targets_for(Format::Psd).contains(&Target::Psd));
         assert_eq!(targets_for(Format::Docx), &[Target::Pdf]);
         assert!(targets_for(Format::Svg).contains(&Target::Svg));
-        assert!(Target::ALL.iter().all(|t| Format::Pdf != match t { Target::Image(f) => *f, _ => Format::Jpeg }));
+        assert!(Target::ALL.iter().all(|t| Format::Pdf
+            != match t {
+                Target::Image(f) => *f,
+                _ => Format::Jpeg,
+            }));
     }
 }

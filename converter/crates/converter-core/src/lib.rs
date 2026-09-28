@@ -51,7 +51,9 @@ pub fn convert(src: &Path, target: Target, opts: &Options) -> Result<Vec<PathBuf
         (Ai, Target::Pdf) => engines::pdf::ai_to_pdf(src, opts).map(|p| vec![p]),
         (Svg, Target::Svg) => write_output(src, "svg", "", opts, |w| engines::vector::optimize(src, w)).map(|p| vec![p]),
         (Svg, Target::Pdf) => write_output(src, "pdf", "", opts, |w| engines::vector::svg_to_pdf(src, w)).map(|p| vec![p]),
-        (Docx | Pptx | Xlsx, Target::Pdf) => write_output(src, "pdf", "", opts, |w| engines::office::to_pdf(src, format, w)).map(|p| vec![p]),
+        (Docx | Pptx | Xlsx, Target::Pdf) => {
+            write_output(src, "pdf", "", opts, |w| engines::office::to_pdf(src, format, w)).map(|p| vec![p])
+        }
         (Markdown, Target::Html) => write_output(src, "html", "", opts, |w| engines::markdown::to_html(src, w)).map(|p| vec![p]),
         (Markdown, Target::Pdf) => write_output(src, "pdf", "", opts, |w| engines::markdown::to_pdf(src, w)).map(|p| vec![p]),
         // Everything else starts from a single decoded image.
@@ -61,7 +63,9 @@ pub fn convert(src: &Path, target: Target, opts: &Options) -> Result<Vec<PathBuf
                 Target::Image(f) => write_output(src, f.extension(), "", opts, |w| engines::raster::encode(&img, f, opts, w))?,
                 Target::Psd => write_output(src, "psd", "", opts, |w| engines::psd::encode(&img, w))?,
                 Target::Svg => write_output(src, "svg", "", opts, |w| engines::vector::trace(&img, w))?,
-                Target::Pdf => write_output(src, "pdf", "", opts, |w| engines::pdf::images_to_pdf(std::slice::from_ref(&img), opts.quality, w))?,
+                Target::Pdf => {
+                    write_output(src, "pdf", "", opts, |w| engines::pdf::images_to_pdf(std::slice::from_ref(&img), opts.quality, w))?
+                }
                 _ => return Err(Error::NotPossible { from: format, to: target }),
             };
             Ok(vec![out])

@@ -2,6 +2,7 @@
 //! Also renders modern Illustrator files, which are PDF inside.
 use std::io::Write;
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use flate2::Compression;
 use flate2::write::ZlibEncoder;
@@ -22,7 +23,8 @@ pub(crate) enum Part {
     Image(DynamicImage),
 }
 
-fn parse(data: Vec<u8>) -> Result<Pdf, Error> {
+/// Parses a PDF. Takes an `Arc` so parallel workers share one copy of the file's bytes.
+fn parse(data: Arc<Vec<u8>>) -> Result<Pdf, Error> {
     Pdf::new(data).map_err(|e| match format!("{e:?}") {
         s if s.contains("Encrypt") || s.contains("Password") => Error::Unsupported("This PDF is password-protected.".into()),
         s => Error::decode(format!("PDF: {s}")),
@@ -36,7 +38,8 @@ fn render_page(pdf: &Pdf, index: usize, dpi: u16, transparent: bool) -> Result<D
     if w * scale > u16::MAX as f32 || h * scale > u16::MAX as f32 {
         return Err(Error::Unsupported(format!("Page {} is too large to render at {dpi} DPI; lower the DPI in Options.", index + 1)));
     }
-    let settings = RenderSettings { x_scale: scale, y_scale: scale, bg_color: if transparent { TRANSPARENT } else { WHITE }, ..Default::default() };
+    let settings =
+        RenderSettings { x_scale: scale, y_scale: scale, bg_color: if transparent { TRANSPARENT } else { WHITE }, ..Default::default() };
     let pixmap = render(page, &RenderCache::new(), &InterpreterSettings::default(), &settings);
     let (pw, ph) = (pixmap.width() as u32, pixmap.height() as u32);
     let px: Vec<u8> = pixmap.take_unpremultiplied().into_iter().flat_map(|p| [p.r, p.g, p.b, p.a]).collect();
@@ -47,7 +50,7 @@ fn render_page(pdf: &Pdf, index: usize, dpi: u16, transparent: bool) -> Result<D
 /// PDF → one image per page. Pages render in parallel: each thread parses its own copy of the document,
 /// because hayro's render cache can't be shared across threads.
 pub(crate) fn render_pages(src: &Path, format: Format, opts: &Options) -> Result<Vec<PathBuf>, Error> {
-    let data = std::fs::read(src).map_err(|e| Error::io(src, e))?;
+    let data = Arc::new(std::fs::read(src).map_err(|e| Error::io(src, e))?);
     let n = parse(data.clone())?.pages().len();
     if n == 0 {
         return Err(Error::decode("the PDF has no pages"));
@@ -103,7 +106,7 @@ fn check_modern_ai(data: &[u8]) -> Result<(), Error> {
 pub(crate) fn render_first_page(src: &Path, opts: &Options) -> Result<DynamicImage, Error> {
     let data = std::fs::read(src).map_err(|e| Error::io(src, e))?;
     check_modern_ai(&data)?;
-    let pdf = parse(data)?;
+    let pdf = parse(Arc::new(data))?;
     if pdf.pages().is_empty() {
         return Err(Error::AiLegacy);
     }
@@ -114,6 +117,7 @@ pub(crate) fn render_first_page(src: &Path, opts: &Options) -> Result<DynamicIma
 pub(crate) fn ai_to_pdf(src: &Path, opts: &Options) -> Result<PathBuf, Error> {
     let data = std::fs::read(src).map_err(|e| Error::io(src, e))?;
     check_modern_ai(&data)?;
+    let data = Arc::new(data);
     parse(data.clone())?;
     write_output(src, "pdf", "", opts, |w| w.write_all(&data).map_err(|e| Error::encode("PDF", e)))
 }
@@ -219,11 +223,14 @@ pub(crate) fn combine(parts: Vec<Part>, quality: u8, out: &mut dyn Write) -> Res
         }
     }
     let count = kids.len() as i64;
-    doc.objects.insert(pages_id, Object::Dictionary(dictionary! {
-        "Type" => "Pages",
-        "Kids" => kids.into_iter().map(Object::Reference).collect::<Vec<_>>(),
-        "Count" => count,
-    }));
+    doc.objects.insert(
+        pages_id,
+        Object::Dictionary(dictionary! {
+            "Type" => "Pages",
+            "Kids" => kids.into_iter().map(Object::Reference).collect::<Vec<_>>(),
+            "Count" => count,
+        }),
+    );
     let catalog = doc.add_object(dictionary! { "Type" => "Catalog", "Pages" => pages_id });
     doc.trailer.set("Root", catalog);
     save(&mut doc, out)

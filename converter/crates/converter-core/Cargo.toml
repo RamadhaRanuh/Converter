@@ -10,6 +10,7 @@ fast_image_resize = { version = "6.1.0", features = ["rayon", "image"] }
 flate2 = "1.1.10"
 hayro = "0.7.1"
 image = { version = "0.25.10", default-features = false, features = ["jpeg", "png", "bmp", "tiff", "gif", "webp", "rayon"] }
+libheif-rs = { version = "3.0.0", default-features = false, features = ["v1_23"], optional = true }
 lopdf = "0.45.0"
 office2pdf = "0.7.0"
 oxvg_ast = { version = "0.0.8", features = ["roxmltree"] }
@@ -26,3 +27,8 @@ zune-psd = "0.5.1"
 [dev-dependencies]
 docx-rs = "=0.4.22"
 tempfile = "3.27.0"
+
+[features]
+# HEIC input via libheif + libde265 (LGPL, shipped as DLLs). Needs vcpkg: `libheif[core]:x64-windows`,
+# VCPKG_ROOT set and VCPKGRS_DYNAMIC=1. See converter/README.md.
+heic = ["dep:libheif-rs"]

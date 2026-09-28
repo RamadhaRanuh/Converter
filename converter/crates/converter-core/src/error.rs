@@ -18,7 +18,9 @@ pub enum Error {
     Encode { format: String, reason: String },
     #[error("This PSD has no stored composite image. Re-save it in Photoshop with \"Maximize compatibility\" turned on.")]
     PsdNoComposite,
-    #[error("This is a legacy Illustrator file (saved without PDF content). Re-save it in Illustrator with \"Create PDF Compatible File\" turned on.")]
+    #[error(
+        "This is a legacy Illustrator file (saved without PDF content). Re-save it in Illustrator with \"Create PDF Compatible File\" turned on."
+    )]
     AiLegacy,
     #[error("{0}")]
     Unsupported(String),

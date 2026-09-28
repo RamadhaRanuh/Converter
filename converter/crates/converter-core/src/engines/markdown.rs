@@ -6,8 +6,8 @@ use std::path::Path;
 use comrak::nodes::{ListType, NodeValue};
 use comrak::{Arena, Node, Options as MdOptions};
 use office2pdf::ir::{
-    Block, Document, FlowPage, List, ListItem, ListKind, Margins, Metadata, Page, PageSize, Paragraph, ParagraphStyle, Run,
-    StyleSheet, Table, TableCell, TableRow, TextStyle,
+    Block, Document, FlowPage, List, ListItem, ListKind, Margins, Metadata, Page, PageSize, Paragraph, ParagraphStyle, Run, StyleSheet,
+    Table, TableCell, TableRow, TextStyle,
 };
 
 use crate::Error;
@@ -207,7 +207,10 @@ impl Ctx {
             let base = TextStyle { font_size: Some(10.0), bold: header.then_some(true), ..Default::default() };
             let cells: Vec<TableCell> = row
                 .children()
-                .map(|cell| TableCell { content: vec![Block::Paragraph(para(inlines(cell, &base), ParagraphStyle::default()))], ..Default::default() })
+                .map(|cell| TableCell {
+                    content: vec![Block::Paragraph(para(inlines(cell, &base), ParagraphStyle::default()))],
+                    ..Default::default()
+                })
                 .collect();
             cols = cols.max(cells.len());
             rows.push(TableRow { cells, height: None, minimum_height: None });
@@ -253,7 +256,10 @@ fn collect<'a>(node: Node<'a>, style: &TextStyle, href: Option<&str>, runs: &mut
                 collect(c, &s, Some(&l.url), runs);
             }
             NodeValue::Image(img) => {
-                let alt: String = c.descendants().filter_map(|d| if let NodeValue::Text(t) = &d.data().value { Some(t.to_string()) } else { None }).collect();
+                let alt: String = c
+                    .descendants()
+                    .filter_map(|d| if let NodeValue::Text(t) = &d.data().value { Some(t.to_string()) } else { None })
+                    .collect();
                 let label = if alt.is_empty() { img.url.clone() } else { alt };
                 runs.push(run(format!("[image: {label}]"), TextStyle { italic: Some(true), ..style.clone() }, link));
             }

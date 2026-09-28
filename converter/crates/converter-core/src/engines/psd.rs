@@ -58,7 +58,7 @@ fn cmyk_to_rgb(w: u32, h: u32, px: &[u8]) -> Option<RgbImage> {
     if px.len() != (w * h * 4) as usize {
         return None;
     }
-    let rgb = px.chunks_exact(4).flat_map(|p| {
+    let rgb = px.as_chunks::<4>().0.iter().flat_map(|p| {
         let k = p[3] as u16;
         [0, 1, 2].map(|i| ((p[i] as u16 * k) / 255) as u8)
     });
@@ -83,7 +83,7 @@ pub(crate) fn encode(img: &DynamicImage, out: &mut dyn Write) -> Result<(), Erro
     let raw = if alpha {
         // Photoshop's composite convention: colour is stored matted against white.
         let mut px = img.to_rgba8().into_raw();
-        for p in px.chunks_exact_mut(4) {
+        for p in px.as_chunks_mut::<4>().0 {
             let a = p[3] as u32;
             for c in &mut p[..3] {
                 *c = ((*c as u32 * a + 255 * (255 - a) + 127) / 255) as u8;

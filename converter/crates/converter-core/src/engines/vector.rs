@@ -43,10 +43,14 @@ pub(crate) fn render(src: &Path, opts: &Options) -> Result<DynamicImage, Error> 
     let mut pixmap = tiny_skia::Pixmap::new(size.width(), size.height())
         .ok_or_else(|| Error::Unsupported("This SVG is too large to render at this DPI; lower the DPI in Options.".into()))?;
     resvg::render(&tree, tiny_skia::Transform::from_scale(scale, scale), &mut pixmap.as_mut());
-    let px: Vec<u8> = pixmap.pixels().iter().flat_map(|p| {
-        let c = p.demultiply();
-        [c.red(), c.green(), c.blue(), c.alpha()]
-    }).collect();
+    let px: Vec<u8> = pixmap
+        .pixels()
+        .iter()
+        .flat_map(|p| {
+            let c = p.demultiply();
+            [c.red(), c.green(), c.blue(), c.alpha()]
+        })
+        .collect();
     Ok(DynamicImage::ImageRgba8(RgbaImage::from_raw(size.width(), size.height(), px).expect("pixmap size")))
 }
 
@@ -72,7 +76,8 @@ pub(crate) fn optimize(src: &Path, out: &mut dyn Write) -> Result<(), Error> {
     .map_err(|e| Error::decode(format!("SVG: {e}")))?
     .map_err(|e| Error::encode("SVG", e))?;
     // Only keep the optimized document if it still parses as SVG.
-    usvg::Tree::from_str(&result, &usvg::Options::default()).map_err(|e| Error::encode("SVG", format!("optimizer produced invalid SVG: {e}")))?;
+    usvg::Tree::from_str(&result, &usvg::Options::default())
+        .map_err(|e| Error::encode("SVG", format!("optimizer produced invalid SVG: {e}")))?;
     out.write_all(result.as_bytes()).map_err(|e| Error::encode("SVG", e))
 }
 
@@ -84,8 +89,7 @@ pub(crate) fn svg_to_pdf(src: &Path, out: &mut dyn Write) -> Result<(), Error> {
     let tree = u::Tree::from_data(&data, &uopts).map_err(|e| Error::decode(format!("SVG: {e}")))?;
     // SVG user units are CSS pixels (96 per inch), so a 96 px wide SVG becomes a 1 inch wide page.
     let page = svg2pdf::PageOptions { dpi: 96.0 };
-    let pdf = svg2pdf::to_pdf(&tree, svg2pdf::ConversionOptions::default(), page)
-        .map_err(|e| Error::encode("PDF", format!("{e:?}")))?;
+    let pdf = svg2pdf::to_pdf(&tree, svg2pdf::ConversionOptions::default(), page).map_err(|e| Error::encode("PDF", format!("{e:?}")))?;
     out.write_all(&pdf).map_err(|e| Error::encode("PDF", e))
 }
 
