@@ -8,3 +8,8 @@ Convert:
 Todo:
 - svg error✅
 - AI & PSD testing
+
+## Desktop app (Rust)
+
+A downloadable, offline rewrite lives in [`converter/`](converter/README.md): a fast Rust core with a desktop
+window and a command-line tool, covering images, HEIC, PSD, AI, SVG, PDF, Office documents and Markdown.

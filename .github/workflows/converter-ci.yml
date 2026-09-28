@@ -1,0 +1,57 @@
+name: converter CI
+
+on:
+  push:
+    paths: ["converter/**", ".github/workflows/converter-*.yml"]
+  pull_request:
+    paths: ["converter/**", ".github/workflows/converter-*.yml"]
+
+defaults:
+  run:
+    working-directory: converter
+
+env:
+  CARGO_TERM_COLOR: always
+  VCPKGRS_DYNAMIC: "1"
+
+jobs:
+  test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust toolchain
+        run: rustup update stable && rustup default stable && rustup component add rustfmt clippy
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            converter/target
+          key: cargo-${{ runner.os }}-${{ hashFiles('converter/Cargo.lock') }}
+
+      - uses: actions/cache@v4
+        with:
+          path: C:/vcpkg/archives
+          key: vcpkg-libheif-core-x64-windows-v1
+
+      # libheif without the GPL x265 encoder: decode only, via libde265 (LGPL), built as DLLs.
+      - name: libheif (vcpkg)
+        shell: pwsh
+        env:
+          VCPKG_DEFAULT_BINARY_CACHE: C:/vcpkg/archives
+        run: |
+          New-Item -ItemType Directory -Force C:/vcpkg/archives | Out-Null
+          & "$env:VCPKG_INSTALLATION_ROOT/vcpkg.exe" install "libheif[core]:x64-windows"
+          "VCPKG_ROOT=$env:VCPKG_INSTALLATION_ROOT" >> $env:GITHUB_ENV
+          "$env:VCPKG_INSTALLATION_ROOT\installed\x64-windows\bin" >> $env:GITHUB_PATH
+
+      - name: Format
+        run: cargo fmt --all --check
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --features converter-core/heic -- -D warnings
+
+      - name: Test
+        run: cargo test --workspace --features converter-core/heic
