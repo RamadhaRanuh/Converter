@@ -1,0 +1,17 @@
+[package]
+name = "converter-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+fast_image_resize = { version = "6.1.0", features = ["rayon", "image"] }
+image = { version = "0.25.10", default-features = false, features = ["jpeg", "png", "bmp", "tiff", "gif", "webp", "rayon"] }
+rayon = "1.12.0"
+thiserror = "2.0.21"
+webp = "0.3.1"
+zune-core = "0.5.3"
+zune-psd = "0.5.1"
+
+[dev-dependencies]
+tempfile = "3.27.0"
