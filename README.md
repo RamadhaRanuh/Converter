@@ -1,6 +1,6 @@
-<h1 align="center">Convertly – A sleek, modern play on "convert"</h1>
+<h1 align="center">Convertly"</h1>
 
-<p align="center">A fast, offline desktop converter for images, designs and documents. Drop files in, pick a format, done.</p>
+<p align="center">A fast, offline desktop converter for images, designs, and documents. Drop files in, pick a format, done.</p>
 
 ### Built with the tools and technologies:
 
