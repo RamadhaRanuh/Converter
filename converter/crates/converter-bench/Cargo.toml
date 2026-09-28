@@ -1,6 +1,12 @@
 [package]
 name = "converter-bench"
-version = "0.1.0"
-edition = "2024"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+publish = false
 
 [dependencies]
+converter-core = { version = "0.1.0", path = "../converter-core" }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_System_ProcessStatus", "Win32_System_Threading", "Win32_Foundation"] }
