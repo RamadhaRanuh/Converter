@@ -61,7 +61,7 @@ pub fn convert(src: &Path, target: Target, opts: &Options) -> Result<Vec<PathBuf
                 Target::Image(f) => write_output(src, f.extension(), "", opts, |w| engines::raster::encode(&img, f, opts, w))?,
                 Target::Psd => write_output(src, "psd", "", opts, |w| engines::psd::encode(&img, w))?,
                 Target::Svg => write_output(src, "svg", "", opts, |w| engines::vector::trace(&img, w))?,
-                Target::Pdf => write_output(src, "pdf", "", opts, |w| engines::pdf::images_to_pdf(std::slice::from_ref(&img), w))?,
+                Target::Pdf => write_output(src, "pdf", "", opts, |w| engines::pdf::images_to_pdf(std::slice::from_ref(&img), opts.quality, w))?,
                 _ => return Err(Error::NotPossible { from: format, to: target }),
             };
             Ok(vec![out])
@@ -84,7 +84,7 @@ pub fn combine(srcs: &[PathBuf], opts: &Options) -> Result<PathBuf, Error> {
             engines::pdf::Part::Image(decode_image(s, f, opts)?)
         });
     }
-    write_output(first, "pdf", "-combined", opts, |w| engines::pdf::combine(parts, w))
+    write_output(first, "pdf", "-combined", opts, |w| engines::pdf::combine(parts, opts.quality, w))
 }
 
 /// Decodes any Source file that has a single-image form into pixels.

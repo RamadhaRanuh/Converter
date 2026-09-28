@@ -88,9 +88,6 @@ impl Format {
         })
     }
 
-    pub(crate) fn is_raster_encodable(self) -> bool {
-        matches!(self, Format::Jpeg | Format::Png | Format::WebP | Format::Bmp | Format::Tiff | Format::Gif)
-    }
 }
 
 impl fmt::Display for Format {
